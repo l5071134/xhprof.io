@@ -127,6 +127,7 @@ CREATE TABLE `requests` (
   `request_caller_id` int(10) unsigned NOT NULL,
   `https` tinyint(3) unsigned NOT NULL,
   `request_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `xhprof_data` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `request_host_id` (`request_host_id`),
   KEY `request_method_id` (`request_method_id`),
