@@ -18,6 +18,29 @@ class Data
 
 		$this->db	= $db;
 	}
+	
+	public function get_xfprof_data($id)
+	{
+	    $sth	= $this->db->prepare("
+	    	SELECT
+	    		`r1`.`xhprof_data`
+	    	FROM
+	    		`requests` `r1`
+	    	WHERE
+	    		`r1`.`id` = :id
+	    	LIMIT 1;");
+	
+	    $sth->execute(array('id' => $id));
+	     
+	    $result	= $sth->fetch(PDO::FETCH_ASSOC);
+	    $sth->closeCursor();
+	   
+	    if(!$result)
+	    {
+	        return FALSE;
+	    }
+	    return $result['xhprof_data'];
+	}
  
     public function get($id)
     {
@@ -132,6 +155,8 @@ class Data
 	 */
 	public function save(array $xhprof_data)
 	{
+	    $xhprof_data_str = serialize($xhprof_data);
+	    
 		if(!isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']))
 		{
 			throw new DataException('XHProf.io cannot function in a server environment that does not define REQUEST_METHOD, HTTP_HOST or REQUEST_URI.');
@@ -175,12 +200,13 @@ class Data
 			$request['uri_id']		= $this->db->lastInsertId();
 		}
 		
-		$sth	= $this->db->prepare("INSERT INTO `requests` SET `request_host_id` = :request_host_id, `request_uri_id` = :request_uri_id, `request_method_id` = :request_method_id, `https` = :https;");
+		$sth	= $this->db->prepare("INSERT INTO `requests` SET `request_host_id` = :request_host_id, `request_uri_id` = :request_uri_id, `request_method_id` = :request_method_id, `https` = :https, `xhprof_data` = :xhprof_data;");
 		
 		$sth->bindValue(':request_host_id', $request['host_id'], PDO::PARAM_INT);
 		$sth->bindValue(':request_uri_id', $request['uri_id'], PDO::PARAM_INT);
 		$sth->bindValue(':request_method_id', $request['method_id'], PDO::PARAM_INT);
 		$sth->bindValue(':https', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 0 : 1, PDO::PARAM_INT);
+		$sth->bindValue(':xhprof_data', $xhprof_data_str, PDO::PARAM_STR);
 		
 		$sth->execute();
 		
@@ -481,7 +507,6 @@ class Data
 			SELECT
 				r1.id request_id,
 				UNIX_TIMESTAMP(r1.request_timestamp) request_timestamp,
-				
 				rh1.id host_id,
 				rh1.host,
 				

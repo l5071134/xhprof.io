@@ -30,6 +30,7 @@ require __DIR__ . '/histogram.inc.tpl.php';
 				<th class="ay-sort host" rowspan="2">Host</th>
 				<th class="ay-sort" rowspan="2">URI</th>
 				<th class="ay-sort request-method" rowspan="2">Request Method</th>
+				<th class="ay-sort request-method" rowspan="2">Callgraph</th>
 				<th class="heading" colspan="4">Metrics</th>
 				<th class="ay-sort date-time" rowspan="2" data-ay-sort-index="8">Request Time</th>
 			</tr>
@@ -50,6 +51,7 @@ require __DIR__ . '/histogram.inc.tpl.php';
 				<td><a href="<?=url('uris', array('host_id' => $e['host_id']))?>"><?=htmlspecialchars($e['host'])?></a></td>
 				<td><a href="<?=url('uris', array('host_id' => $e['host_id'], 'uri_id' => $e['uri_id']))?>"><?=htmlspecialchars($e['uri'])?></a></td>
 				<td><?=$e['request_method']?></td>
+				<td><a href="<?="callgraph.php?run={$e['request_id']}"?>" target="_blank">Callgraph link</a></td>
 				<td class="metrics" data-ay-sort-weight="<?=$e['wt']['raw']?>"><?=$e['wt']['formatted']?></td>
 				<td class="metrics" data-ay-sort-weight="<?=$e['cpu']['raw']?>"><?=$e['cpu']['formatted']?></td>
 				<td class="metrics" data-ay-sort-weight="<?=$e['mu']['raw']?>"><?=$e['mu']['formatted']?></td>

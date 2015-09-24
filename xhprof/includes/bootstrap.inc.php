@@ -2,6 +2,7 @@
 namespace ay\xhprof;
 
 session_start();
+date_default_timezone_set("PRC");
 
 if (isset($_GET['ay']['debug'])) {
 	$_SESSION['ay']['debug'] = !empty($_GET['ay']['debug']);
@@ -26,7 +27,7 @@ define('ay\MESSAGE_ERROR', 3);
 define('ay\MESSAGE_IMPORTANT', 4);
 
 define('ay\FORMAT_DATE', 'M j, Y');
-define('ay\FORMAT_DATETIME', 'M j, Y H:i');
+define('ay\FORMAT_DATETIME', 'M j, Y H:i:s');
 
 require BASE_PATH . '/includes/helpers.ay.inc.php';
 require BASE_PATH . '/includes/helpers.xhprof.inc.php';
